@@ -1,10 +1,21 @@
 
 const grid = document.querySelector('.grid')
+const scoreDisplay = document.querySelector('#score')
 const blockWidth = 100
 const blockHeight = 20
-const boardWidth = 565
+const boardWidth = 560
+const boardHeight = 300
+const ballDiameter = 20
+let timerId
+let xDirection = -2
+let yDirection = 2
+
 const userStart = [230, 10]
 let currentPosition = userStart
+
+const ballStart = [270, 40]
+let ballCurrentPosition = ballStart
+
 
 // create block individual
 class Block {
@@ -65,6 +76,11 @@ function drawUser() {
 
 }
 
+// draw ball 
+function drawBall() {
+    ball.style.left = ballCurrentPosition[0] + 'px'
+    ball.style.bottom = ballCurrentPosition[1] + 'px'
+}
 
 // move user
 
@@ -87,3 +103,72 @@ function moveUser(e) {
 
 
 document.addEventListener('keydown', moveUser)
+
+
+// add user 
+
+const ball = document.createElement('div')
+ball.classList.add('ball')
+drawBall()
+grid.appendChild(ball)
+
+// move ball
+function moveBall() {
+    ballCurrentPosition[0] += xDirection
+    ballCurrentPosition[1] += yDirection
+    drawBall()
+    checkForCollision()
+}
+
+timerId = setInterval(moveBall, 30)
+
+// change direction when hit
+
+function checkForCollision() {
+    // check for block collision
+    for (let i = 0; i < blocks.length; i++) {
+        if (
+            (ballCurrentPosition[0] > blocks[i].bottomLeft[0] && ballCurrentPosition[0] < blocks[i].bottomRight[0]) &&
+            ((ballCurrentPosition[i] + ballDiameter) > blocks[i].bottomLeft[1] && ballCurrentPosition[1] < blocks[i].topLeft[1])
+
+        ) {
+            const allBlocks = Array.from(document.querySelectorAll('.block'))
+            console.log(allBlocks)
+        }
+    }
+
+
+
+    // check for wall collisions
+    if (ballCurrentPosition[0] >= (boardWidth - ballDiameter) ||
+        ballCurrentPosition[1] >= (boardHeight - ballDiameter) ||
+        ballCurrentPosition[0] <= 0
+    ) {
+        changeDirection()
+    }
+    // check for game over 
+    if (ballCurrentPosition[1] <= 0) {
+        clearInterval(timerId)
+        scoreDisplay.innerHTML = 'You Lose!'
+        document.removeEventListener('keydown', moveUser)
+    }
+}
+
+function changeDirection() {
+    if (xDirection === 2 && yDirection === 2) {
+        yDirection = -2
+        return
+    }
+    if (xDirection === 2 && yDirection === -2) {
+        xDirection = -2
+        return
+    }
+    if (xDirection === -2 && yDirection === -2) {
+        yDirection == 2
+        return
+    }
+    if (xDirection === -2 && yDirection == 2) {
+        xDirection == 2
+        return
+    }
+}
