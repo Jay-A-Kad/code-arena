@@ -2,6 +2,9 @@
 const grid = document.querySelector('.grid')
 const blockWidth = 100
 const blockHeight = 20
+const boardWidth = 565
+const userStart = [230, 10]
+let currentPosition = userStart
 
 // create block individual
 class Block {
@@ -31,8 +34,6 @@ const blocks = [
     new Block(340, 210),
     new Block(450, 210),
 ]
-console.log(blocks[0])
-
 
 // draw block funtion
 function addBlocks() {
@@ -46,4 +47,43 @@ function addBlocks() {
     }
 }
 
+
 addBlocks()
+
+// add user
+
+const user = document.createElement('div')
+user.classList.add('user')
+drawUser()
+grid.appendChild(user)
+
+
+// draw user
+function drawUser() {
+    user.style.left = currentPosition[0] + 'px'
+    user.style.bottom = currentPosition[1] + 'px'
+
+}
+
+
+// move user
+
+function moveUser(e) {
+    switch (e.key) {
+        case 'ArrowLeft':
+            if (currentPosition[0] > 0) {
+                currentPosition[0] -= 10
+                drawUser()
+            }
+            break;
+        case 'ArrowRight':
+            if (currentPosition[0] < boardWidth - blockWidth) {
+                currentPosition[0] += 10
+                drawUser()
+            }
+            break;
+    }
+}
+
+
+document.addEventListener('keydown', moveUser)

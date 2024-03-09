@@ -12,3 +12,11 @@
     background-color: aqua;
 
 }
+
+.user {
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    background-color: purple;
+
+}
